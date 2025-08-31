@@ -48,7 +48,34 @@ def main():
 
         cm = confusion_matrix(y_true, y_pred, labels=list(range(10)), normalize="true")
         fig, ax=plt.subplots(figsize=(6,5))
-        ax.imshow(cm, cmap="Blues", interpolation="nearest")
+        im=ax.imshow(cm, cmap="Blues", interpolation="nearest")
+        fig.colorbar(im,ax=ax)
+
+
+        ax.set(
+            xticks=np.arange(10),
+            yticks=np.arange(10),
+            xticklabels=CLASSES,
+            yticklabels=CLASSES,xlabel="Predicted", 
+            ylabel="True",
+            title="Fashion-MNIST Confusion Matrix (normalized)")
+        plt.setp(ax.get_xticklabels(),rotation=45, ha='right')
+
+
+        fmt='.2f'
+        thresh = cm.max() / 2.0
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                ax.text(
+                    j, i, format(cm[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black",
+                )
+
+        os.makedirs("runs", exist_ok=True)
+        plt.savefig("runs/confmat_mlp.png", dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        print('Saved confustion matrix to runs/confmat_mlp.png')
 
 
 
